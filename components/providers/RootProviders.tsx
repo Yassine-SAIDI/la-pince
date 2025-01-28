@@ -7,9 +7,10 @@ function RootProviders({ children } : { children: ReactNode }) {
   return (
     <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange   
+        defaultTheme="dark"
+        enableSystem={true}
+        disableTransitionOnChange={true}
+      storageKey="theme-preference"
     >
         {children}
     </ThemeProvider>
