@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model UserSettings {
+  userId String @id 
+  currency String
+}
+
+model Category {
+  userId String
+  name String
+  createdAt DateTime @default(now())
+  icon String
+  type String @default("expense")
+
+  @@unique([name, userId, type])
+}
+
+model Transaction {
+  id String @id @default(uuid())
+  userId String
+  amount Float
+  description String?
+  category String
+  categoryIcon String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date DateTime
+  type String @default("expense")
+
+  @@unique([id, userId])
+}
+
+model MonthHistory {
+  userId String
+  day Int
+  month Int
+  year Int
+  income Float
+  expense Float
+
+  @@unique([userId, day, month, year])
+}
+
+model YearHistory {
+  userId String
+  month Int
+  year Int
+  income Float
+  expense Float
+
+  @@unique([userId, month, year])
+}
