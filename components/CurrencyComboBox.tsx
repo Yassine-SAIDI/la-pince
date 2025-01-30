@@ -37,7 +37,7 @@ export function CurrencyComboBox() {
   const [open, setOpen] = useState(false);
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const userSettings = useQuery<UserSettings>({
@@ -62,15 +62,18 @@ export function CurrencyComboBox() {
           name: code,
         }));
         setCurrencies(currencyList);
-        setLoading(false);
+        // console.log(data)
+        // setLoading(false);
       } catch (error) {
         console.error("Error fetching currencies:", error);
-        setLoading(false);
+        // setLoading(false);
       }
     }
 
     fetchCurrencies();
   }, []);
+
+  // console.log(getCurrencies)
 
   const mutation = useMutation({
     mutationFn: UpdateUserCurrency,
@@ -149,7 +152,7 @@ function OptionList({
 }) {
   return (
     <Command>
-      <CommandInput placeholder="Filter currency..." />
+      <CommandInput placeholder="Recherche" />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
