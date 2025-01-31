@@ -93,7 +93,7 @@ function StatCard({
   return (
     <Card className="flex h-24 w-full items-center gap-2 p-4">
       {icon}
-      <div className="flex flex-col gap-0 items-center">
+      <div className="flex flex-col gap-1 items-start">
         <p className="text-muted-foreground">{title}</p>
         <CountUp
           end={value}

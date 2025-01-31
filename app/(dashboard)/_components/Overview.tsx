@@ -18,7 +18,7 @@ function Overview({ userSettings }: { userSettings: UserSettings }) {
   return (
     <>
     <div className="container p-6 flex flex-wrap gap-2 items-end justify-between">
-      <h2 className="">Overview</h2>
+      <h2 className="mt-12 text-3xl font-bold">Overview</h2>
       <div className="flex items-center gap-3">
         <DateRangePicker
           initialDateFrom={dateRange.from}
