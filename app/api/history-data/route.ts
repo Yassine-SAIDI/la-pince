@@ -28,9 +28,9 @@ export async function GET(request: Request){
         month,
     });
 
-    // if(!queryParams.success){
-    //     return Response.json(queryParams.error.message, {status: 400});
-    // }
+    if(!queryParams.success){
+        return Response.json(queryParams.error.message, {status: 400});
+    }
 
     const data = await getHistoryData(user.id, queryParams.data.timeframe,{
         year: queryParams.data.year,

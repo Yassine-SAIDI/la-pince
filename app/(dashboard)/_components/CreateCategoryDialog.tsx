@@ -3,6 +3,7 @@
 interface Props {
   type: TransactionType;
   successCallback: (category: Category) => void;
+  trigger?: React.ReactNode;
 }
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  Form
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,7 +40,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleOff, Loader2, PlusSquare } from "lucide-react";
 import React, { useCallback, useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -47,7 +49,7 @@ import { Category } from "@prisma/client";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 
-function CreateCategoryDialog({ type, successCallback }: Props) {
+function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
   const [open, setOpen] = useState(false);
   const form = useForm<CreateCategorySchemaType>({
     resolver: zodResolver(CreateCategorySchema),
@@ -96,13 +98,15 @@ const onSubmit = useCallback((value: CreateCategorySchemaType) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
+        { trigger ? (trigger) : (
+          <Button
           variant={"ghost"}
           className="flex border-separate items-center rounded-b-none border-b p-3 text-muted-foreground "
         >
           <PlusSquare className="mr-2 h-4 w-4" />
           Ajouter une catégorie
         </Button>
+      )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
