@@ -37,10 +37,10 @@ export interface DateRangePickerProps {
   showCompare?: boolean
 }
 
-const formatDate = (date: Date, locale: string = 'en-us'): string => {
+const formatDate = (date: Date, locale: string = 'fr-fr'): string => {
   return date.toLocaleDateString(locale, {
-    month: 'short',
     day: 'numeric',
+    month: 'short',
     year: 'numeric'
   })
 }
@@ -92,7 +92,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   initialCompareTo,
   onUpdate,
   align = 'end',
-  locale = 'en-US',
+  locale = 'fr-fr',
   showCompare = true
 }): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false)

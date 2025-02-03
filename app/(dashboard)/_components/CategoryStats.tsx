@@ -70,8 +70,8 @@ function CategoriesCard ({ formatter, type, data }:{
     return (
         <Card className="h-80 w-full col-span-6">
             <CardHeader>
-                <CardTitle className="grid grid-flow-row justify-between gap-2 text-muted-foreground md:grid-flow-col">
-                    <span>{type === "income" ? "Revenus" : "Dépenses"}</span>
+                <CardTitle className="flex justify-between gap-2 text-muted-foreground text-lg md:text-xl">
+                    <span>{type === "income" ? "Revenus" : "Dépenses"} par catégorie</span>
                     <span>{formatter.format(total)}</span>
                 </CardTitle>
             </CardHeader>
@@ -86,7 +86,8 @@ function CategoriesCard ({ formatter, type, data }:{
                 )}
 
                 {filteredData.length > 0 && (
-                  <ScrollArea className="h-60 w-full px-4">
+                  //  à vérifier le H de la div
+                  <ScrollArea className="min-h-60 h-auto w-full px-4">
                     <div className="flex flex-col gap-4 w-full p-4">
                       {filteredData.map((item) =>{
                         const amount = item._sum.amount || 0;
@@ -99,7 +100,7 @@ function CategoriesCard ({ formatter, type, data }:{
                           >
                             <div className="flex items-center justify-between">
                               <span className="flex items-center text-gray-400 text-lg">
-                                {item.categoryIcon} {item.category}
+                                {item.category}
                                 <span className="text-muted-foreground text-sm ml-4 ">
                                   {percentage.toFixed(0) }%
                                 </span>
@@ -110,8 +111,9 @@ function CategoriesCard ({ formatter, type, data }:{
                             </div>
                             <Progress value={percentage}
                             indicator = {
-                              type === "income" ? "bg-green-500" : "bg-red-500"
+                              type === "income" ? "bg-emerald-500 " : "bg-red-500"
                             }
+                            className="h-1 md:h-2 "
                             />
                           </div>
                         );

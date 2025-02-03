@@ -34,14 +34,14 @@ function StatsCards({ from, to, userSettings }: Props) {
   const balance = incomes - expenses;
 
   return (
-    <div className="relative flex flex-wrap gap-2 w-full md:flex-nowrap">
+    <div className="relative flex sm:flex-wrap gap-2 w-full sm:flex-nowrap">
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
         <StatCard
           formatter={formatter}
-          title="Revenues"
+          title="Revenus"
           value={incomes}
           icon={
-            <TrendingUp className="text-emerald-500 bg-emerald-400/10 h-12 w-12 items-center rounded-lg p-2" />
+            <TrendingUp className="text-emerald-500 bg-emerald-400/10 h-8 w-8 md:h-12 md:w-12 items-center rounded-lg p-2" />
           }
         />
       </SkeletonWrapper>
@@ -52,7 +52,7 @@ function StatsCards({ from, to, userSettings }: Props) {
           title="Dépenses"
           value={expenses}
           icon={
-            <TrendingDown className="text-red-500 bg-red-400/10 h-12 w-12 items-center rounded-lg p-2" />
+            <TrendingDown className="text-red-500 bg-red-400/10 h-8 w-8 md:h-12 md:w-12 items-center rounded-lg p-2" />
           }
         />
       </SkeletonWrapper>
@@ -63,7 +63,7 @@ function StatsCards({ from, to, userSettings }: Props) {
         title="Solde"
           value={balance}
           icon={
-            <Wallet className="h-12 w-12 items-center rounded-lg p-2" />
+            <Wallet className="h-8 w-8 md:h-12 md:w-12  items-center rounded-lg p-2" />
           }
         />
       </SkeletonWrapper>
@@ -91,8 +91,8 @@ function StatCard({
     [formatter]
   );
   return (
-    <Card className="flex h-24 w-full items-center gap-2 p-4">
-      {icon}
+    <Card className="flex h-[70px] md:h-24 w-full items-center gap-2 p-2 py-4 md:px-8">
+      <div className="hidden sm:inline-block">{icon}</div>
       <div className="flex flex-col gap-1 items-start">
         <p className="text-muted-foreground">{title}</p>
         <CountUp

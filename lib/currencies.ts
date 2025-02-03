@@ -11,3 +11,4 @@ export const getCurrencies = async () => {
         throw error;
     }
 };
+

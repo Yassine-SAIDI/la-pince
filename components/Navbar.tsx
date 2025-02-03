@@ -21,9 +21,9 @@ function Navbar() {
 };
 
 const items = [
-	{ label: "Home", link: "/" },
+	{ label: "Dashboard", link: "/" },
 	{ label: "Transactions", link: "/transactions" },
-	{ label: "Manage", link: "/manage" },
+	{ label: "Catégories", link: "/manage" },
 	];
 
 
@@ -32,7 +32,7 @@ function MobileNavbar() {
 
   return (
     <div className="block border-separate bg-background md:hidden">
-      <nav className="container flex items-center justify-between px-8">
+      <nav className="container flex items-center justify-between px-4">
         <div className="flex items-center gap-x-4">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -70,10 +70,10 @@ function MobileNavbar() {
 function DesktopNavbar() {
   return (
 	<div className="hidden border-separate border-b bg-background md:block">
-	  <nav className="container flex items-center justify-between px-8">
-		<div className="flex h-[08px] min-h-[60px] items-center gap-x-4"> 
+	  <nav className=" h-[70px]  flex items-center justify-between mx-10">
+		{/* <div className="flex h-[08px] min-h-[60px] items-center gap-x-4">  */}
 			<Logo />
-			<div className="flex h-full">
+			<div className="flex h-full ">
 				{items.map((item) => (
 					<NavbarItem 
 					key={item.label} 
@@ -82,7 +82,7 @@ function DesktopNavbar() {
 					/>
 				))}
 			</div>
-		</div>
+		{/* </div> */}
 		<div className="flex items-center gap-2">
 			<ThemeSwitcherBtn />
 			<UserButton afterSignOutUrl="/" />
@@ -107,7 +107,7 @@ function NavbarItem({ link, label, clickBack }: {
 					buttonVariants({
 						variant: "ghost",
 					}),
-					"w-full justify-start text-lg text-muted-foreground hover:text-foreground",
+					"w-full justify-start text-xl text-muted-foreground hover:text-foreground",
 					isActive && "text-foreground"
 				)}
 				onClick={() => {

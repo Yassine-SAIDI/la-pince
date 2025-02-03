@@ -54,8 +54,8 @@ export async function createTransaction(form: CreateTransactionSchemaType) {
             },
             create: {
                 userId: user.id,
-                day: date.getUTCDate() + 1,
-                month: date.getUTCMonth() + 1,
+                day: date.getUTCDate(),
+                month: date.getUTCMonth(),
                 year: date.getUTCFullYear(),
                 expense: type === "expense" ? amount : 0,
                 income: type === "income" ? amount : 0,
@@ -82,7 +82,7 @@ export async function createTransaction(form: CreateTransactionSchemaType) {
             },
             create: {
                 userId: user.id,
-                month: date.getUTCMonth() + 1,
+                month: date.getUTCMonth(),
                 year: date.getUTCFullYear(),
                 expense: type === "expense" ? amount : 0,
                 income: type === "income" ? amount : 0,

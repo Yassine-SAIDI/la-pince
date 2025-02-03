@@ -51,7 +51,7 @@ export function CurrencyComboBox() {
       (currency) => currency.code === userSettings.data.currency
     )
     if(userCurrency) setSelectedCurrency(userCurrency);
-  }, [userSettings.data]);
+  }, [userSettings.data, currencies]);
 
   useEffect(() => {
     async function fetchCurrencies() {

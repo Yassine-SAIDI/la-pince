@@ -158,6 +158,7 @@ const [open, setOpen] = useState(false);
                       <CategoryPicker
                         type={type}
                         onChange={handelCategoryChange}
+                        value={field.value}
                       />
                     </FormControl>
                     <FormDescription>

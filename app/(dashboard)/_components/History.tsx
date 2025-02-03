@@ -25,7 +25,7 @@ function History({ userSettings }: { userSettings: UserSettings }) {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const [period, setPeriod] = useState<Period>({
     year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
+    month: new Date().getMonth() ,
   });
 
   const formatter = useMemo(() => {
@@ -44,7 +44,7 @@ function History({ userSettings }: { userSettings: UserSettings }) {
     historyDataQuery.data && historyDataQuery.data.length > 0;
 
   return (
-    <div className="container p-6">
+    <div className="container py-6 mb-14">
       <h2 className="mt-12 text-3xl font-bold">Historique</h2>
       <Card className="col-span-12 mt-2 w-full">
         <CardHeader className="gap-2">
@@ -105,11 +105,11 @@ function History({ userSettings }: { userSettings: UserSettings }) {
                       const { year, month, day } = data;
                       const date = new Date(year, month, day || 1);
                       if (timeframe === "year") {
-                        return date.toLocaleString("default", {
-                          month: "long",
+                        return date.toLocaleDateString("default", {
+                          month: "short",
                         });
                       }
-                      return date.toLocaleString("default", { day: "2-digit" });
+                      return date.toLocaleDateString("default", { day: "2-digit" });
                     }}
                   />
                   <YAxis
@@ -159,7 +159,9 @@ function History({ userSettings }: { userSettings: UserSettings }) {
 export default History;
 
 
-function CustomTooltip({ active, payload, formatter }: any) {
+import { TooltipProps } from "recharts";
+
+function CustomTooltip({ active, payload, formatter }: TooltipProps<number, string> & { formatter: Intl.NumberFormat }) {
     if (!active || !payload || payload.length === 0) return null;
     
     const data = payload[0].payload;
@@ -184,8 +186,8 @@ function CustomTooltip({ active, payload, formatter }: any) {
             formatter={formatter}
             label="solde"
             value={income - expense}
-            bgColor="bg-gray-500"
-            textColor="text-gray-500"
+            bgColor="bg-gray-100"
+            textColor="text-gray-100"
             />
 
         </div>

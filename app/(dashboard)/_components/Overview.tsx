@@ -8,6 +8,8 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import StatsCards from "./StatsCards";
 import CategoryStats from "./CategoryStats";
+import CreateTransactionDialog from "./TransactionDialog";
+import { Button } from "@/components/ui/button";
 
 function Overview({ userSettings }: { userSettings: UserSettings }) {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -17,8 +19,32 @@ function Overview({ userSettings }: { userSettings: UserSettings }) {
 
   return (
     <>
-    <div className="container p-6 flex flex-wrap gap-2 items-end justify-between">
-      <h2 className="mt-12 text-3xl font-bold">Overview</h2>
+    <div className="container py-6  flex flex-wrap gap-2 items-end justify-between ">
+      <h2 className="mt-0 sm:mt-4 md:mt-6 lg:mt-8 text-3xl font-bold">Bilan Périodique</h2>
+      <div className="flex items-center gap-3">
+            <CreateTransactionDialog 
+            trigger={
+              <Button
+              variant={"outline"}
+              className='border-emerald-500 bg-emerald-950 text-white hover:bg-emerald-700 hover:text-white'
+              >
+                Ajouter un Revenu
+              </Button>
+            }
+            type={"income"}
+            />
+            <CreateTransactionDialog 
+            trigger={
+            <Button
+            variant={"outline"}
+            className='border-red-500 bg-red-950 text-white hover:bg-red-700 hover:text-white'
+            >
+              Ajouter une Dépense
+            </Button>
+            }
+            type={"expense"}
+            />
+          </div>
       <div className="flex items-center gap-3">
         <DateRangePicker
           initialDateFrom={dateRange.from}
@@ -38,7 +64,10 @@ function Overview({ userSettings }: { userSettings: UserSettings }) {
         />
       </div>
     </div>
-    <div className="container flex w-full flex-col gap-4 px-6">
+
+
+    
+    <div className="container flex w-full flex-col gap-4">
     <StatsCards
     userSettings={userSettings}
     from={dateRange.from}
