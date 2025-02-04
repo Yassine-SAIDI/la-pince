@@ -29,7 +29,7 @@ function Logo() {
       <Image
         src={currentLogo}
         alt="Logo La Pince"
-        width={140}
+        width={180}
         height={1}
         priority
         className="transition-opacity duration-300" 

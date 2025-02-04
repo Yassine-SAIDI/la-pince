@@ -28,9 +28,22 @@ import { DataTableColumnHeader } from "@/components/datatable/ColumnHeader";
 import { cn } from "@/lib/utils";
 import { DataTableFacetedFilter } from "@/components/datatable/FacetedFilters";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, DownloadIcon, MoreHorizontal, Pencil, TrashIcon } from "lucide-react";
-import { download, generateCsv, mkConfig} from "export-to-csv"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  ChevronLeft,
+  ChevronRight,
+  DownloadIcon,
+  MoreHorizontal,
+  Pencil,
+  TrashIcon,
+} from "lucide-react";
+import { download, generateCsv, mkConfig } from "export-to-csv";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import DeleteTransactionDialog from "./DeleteTransactionDialog";
 
 interface Props {
@@ -54,7 +67,7 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
     },
     cell: ({ row }) => (
       <div className="flex gap-2 capitalize">
-        {row.original.categoryIcon}
+        {/* {row.original.categoryIcon} */}
         <div className="capitalize">{row.original.category}</div>
       </div>
     ),
@@ -118,19 +131,17 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
   },
 
   {
-    id : "actions",
+    id: "actions",
     enableHiding: false,
-    cell: ({ row }) => (
-      <RowActions transaction={row.original} />
-    ),
-  }
+    cell: ({ row }) => <RowActions transaction={row.original} />,
+  },
 ];
 
 const csvConfig = mkConfig({
   fieldSeparator: ";",
   decimalSeparator: ",", // ou "." pour l'anglais
   useKeysAsHeaders: true,
-  });
+});
 
 function TransactionTable({ from, to }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -148,13 +159,19 @@ function TransactionTable({ from, to }: Props) {
     initialData: { transactions: [] },
   });
 
-  const handelExportCSV =(data: any []) => {
+  const handelExportCSV = (data: TransactionHistoryRow[]) => {
     if (data.length === 0) {
-      return
+      return;
     }
-    const csv = generateCsv(csvConfig)(data);
+    const csvData = data.map((transaction) => ({
+      ...transaction,
+      createdAt: transaction.createdAt.toISOString(),
+      updatedAt: transaction.updatedAt.toISOString(),
+      date: transaction.date.toISOString(),
+    }));
+    const csv = generateCsv(csvConfig)(csvData);
     download(csvConfig)(csv);
-  }
+  };
 
   const table = useReactTable({
     columns,
@@ -176,17 +193,16 @@ function TransactionTable({ from, to }: Props) {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-
-  const categoriesOptions = useMemo (() => {
+  const categoriesOptions = useMemo(() => {
     const categoriesMap = new Map();
     history.data?.transactions.forEach((transaction: TransactionHistoryRow) => {
       categoriesMap.set(transaction.category, {
-        value : transaction.category,
-        label : `${transaction.categoryIcon} ${transaction.category}`,
+        value: transaction.category,
+        label: `${transaction.category}`,
       });
-      });
-      const uniqueCategories = new Set(categoriesMap.values());
-      return Array.from(uniqueCategories);
+    });
+    const uniqueCategories = new Set(categoriesMap.values());
+    return Array.from(uniqueCategories);
   }, [history.data]);
 
   return (
@@ -194,22 +210,22 @@ function TransactionTable({ from, to }: Props) {
       {/* <pre>{JSON.stringify(categoriesOptions, null, 2)}</pre> */}
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div className="flex gap-2">
-          {table.getColumn('category') && (
-          <DataTableFacetedFilter
-            column={table.getColumn('category')}
-            options={categoriesOptions}
-            title="Catégorie"
-          />
+          {table.getColumn("category") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("category")}
+              options={categoriesOptions}
+              title="Catégorie"
+            />
           )}
-          {table.getColumn('type') && (
-          <DataTableFacetedFilter
-            column={table.getColumn('type')}
-            options={[
-              { value: "income", label: "Revenu" },
-              { value: "expense", label: "Dépense" },
-            ]}
-            title="Nature"
-          />
+          {table.getColumn("type") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("type")}
+              options={[
+                { value: "income", label: "Revenu" },
+                { value: "expense", label: "Dépense" },
+              ]}
+              title="Nature"
+            />
           )}
         </div>
 
@@ -218,28 +234,28 @@ function TransactionTable({ from, to }: Props) {
             variant="outline"
             size={"sm"}
             className="h-8 m-auto lg:flex"
-            onClick={() =>{
-              const data = table.getFilteredRowModel().rows.map((row) => 
-              ({
+            onClick={() => {
+              const data = table.getFilteredRowModel().rows.map((row) => ({
+                userId: row.original.userId,
+                id: row.original.id,
+                categoryIcon: row.original.categoryIcon,
+                createdAt: row.original.createdAt,
+                updatedAt: row.original.updatedAt,
                 category: row.original.category,
                 description: row.original.description,
                 date: row.original.date,
                 type: row.original.type,
                 amount: row.original.amount,
                 formattedAmount: row.original.formattedAmount,
-              })
-              );
+              }));
               handelExportCSV(data);
             }}
           >
-          <DownloadIcon className="h-6 w-6 mr-4" />
-          Exporter CSV
+            <DownloadIcon className="h-6 w-6 mr-4" />
+            Exporter CSV
           </Button>
-
         </div>
         {/*  */}
-
-
       </div>
       <SkeletonWrapper isLoading={history.isFetching}>
         <div className="rounded-md border">
@@ -299,14 +315,13 @@ function TransactionTable({ from, to }: Props) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            {/* <span className="sr-only">Page Précedente</span> */}
             <ChevronLeft />
           </Button>
 
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} sur {" "}
-          {table.getPageCount()}
-        </div>
+          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+            Page {table.getState().pagination.pageIndex + 1} sur{" "}
+            {table.getPageCount()}
+          </div>
 
           <Button
             variant="outline"
@@ -314,7 +329,6 @@ function TransactionTable({ from, to }: Props) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {/* <span className="sr-only">Page Suivente</span> */}
             <ChevronRight />
           </Button>
         </div>
@@ -325,52 +339,48 @@ function TransactionTable({ from, to }: Props) {
 
 export default TransactionTable;
 
-
 function RowActions({ transaction }: { transaction: TransactionHistoryRow }) {
-
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     <>
-    <DeleteTransactionDialog 
-      open={showDeleteDialog}
-      setOpen={setShowDeleteDialog}
-      transactionId={transaction.id}
-    />
+      <DeleteTransactionDialog
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+        transactionId={transaction.id}
+      />
 
-  <DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <Button variant={"ghost"} className="h-8 w-8 p-0">
-      <span className="sr-only">Ouvrir</span>
-      <MoreHorizontal className="h-4 w-4" />
-    </Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent align="end">
-    <DropdownMenuSeparator />
-    <DropdownMenuItem
-      className="flex items-center gap-2"
-      onSelect={() => {
-        setShowDeleteDialog((prev) => !prev);
-      }}
-    >
-      <TrashIcon className="h-4 w-4 text-muted-foreground" />
-      Supprimer
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"} className="h-8 w-8 p-0">
+            <span className="sr-only">Ouvrir</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={() => {
+              setShowDeleteDialog((prev) => !prev);
+            }}
+          >
+            <TrashIcon className="h-4 w-4 text-muted-foreground" />
+            Supprimer
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
 
-    <DropdownMenuItem
-      className="flex items-center gap-2"
-      onSelect={() => {
-        setShowDeleteDialog((prev) => !prev);
-      }}
-    >
-      <Pencil className="h-4 w-4 text-muted-foreground" />
-      Modifier
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-  
-</DropdownMenu>
-</>
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={() => {
+              setShowDeleteDialog((prev) => !prev);
+            }}
+          >
+            <Pencil className="h-4 w-4 text-muted-foreground" />
+            Modifier
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
-
 }
