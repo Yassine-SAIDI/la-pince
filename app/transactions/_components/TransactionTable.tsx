@@ -159,17 +159,11 @@ function TransactionTable({ from, to }: Props) {
     initialData: { transactions: [] },
   });
 
-  const handelExportCSV = (data: TransactionHistoryRow[]) => {
+  const handelExportCSV = (data: any[]) => {
     if (data.length === 0) {
       return;
     }
-    const csvData = data.map((transaction) => ({
-      ...transaction,
-      createdAt: transaction.createdAt.toISOString(),
-      updatedAt: transaction.updatedAt.toISOString(),
-      date: transaction.date.toISOString(),
-    }));
-    const csv = generateCsv(csvConfig)(csvData);
+    const csv = generateCsv(csvConfig)(data);
     download(csvConfig)(csv);
   };
 
@@ -236,11 +230,6 @@ function TransactionTable({ from, to }: Props) {
             className="h-8 m-auto lg:flex"
             onClick={() => {
               const data = table.getFilteredRowModel().rows.map((row) => ({
-                userId: row.original.userId,
-                id: row.original.id,
-                categoryIcon: row.original.categoryIcon,
-                createdAt: row.original.createdAt,
-                updatedAt: row.original.updatedAt,
                 category: row.original.category,
                 description: row.original.description,
                 date: row.original.date,

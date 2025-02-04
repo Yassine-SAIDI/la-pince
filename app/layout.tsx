@@ -40,10 +40,10 @@ export default function RootLayout({
         <Toaster richColors position="top-center" />
         <RootProviders>
           <Navbar />
-                  <div className='w-full'>
+                  <div className='w-full h-screen'>
                   {children}
                   </div>
-                  <footer className='w-full bg-card p-4 flex flex-col items-center justify-center gap-4'>
+                  <footer className='w-full bg-card  p-4 flex flex-col items-center justify-center gap-4'>
                   <p className='text-center text-muted-foreground text-sm'>
                   La Pince © 2025 - Tous droits réservés
                   </p>

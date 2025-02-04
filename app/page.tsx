@@ -13,7 +13,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="container mx-auto flex flex-col items-center min-h-screen p-4">
+    <div className="container mx-auto flex flex-col items-center min-h-screen p-4 w-screen h-screen">
       <Logo />
       <h1 className="text-4xl font-bold mt-8">Bienvenue sur La Pince</h1>
       <p className="mt-4 text-center text-lg">

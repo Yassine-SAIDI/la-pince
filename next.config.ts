@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   typescript: {
     // Ceci désactive la vérification de type pendant le build
     ignoreBuildErrors: true,
+  
   },
   
 };
