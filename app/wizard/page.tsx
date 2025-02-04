@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { CurrencyComboBox } from "@/components/CurrencyComboBox";
+import { prisma } from "@/lib/prisma";
 
 export default async function Page() {
   const user = await currentUser();
@@ -21,11 +22,23 @@ export default async function Page() {
     redirect("/sign-in");
   }
 
+   const existingUserSettings = await prisma.userSettings.findUnique({
+    where: {
+        userId: user.id,
+    },
+});
+
+if (existingUserSettings && existingUserSettings.currency) {
+    redirect("/dashboard");
+}
+
+
+
   return (
     <div className="container flex max-w-2xl flex-col items-center justify-between gap-4">
       <div>
         <h1 className="text-3xl text-center">
-          Bienvenue, <span className="font-bold ml-2">{user.firstName} 👋</span>{" "}
+          Bienvenue, <span className="font-bold ml-2">{user.firstName} </span>{" "}
           !
         </h1>
         <h2 className="mt-4 text-center text-base text-muted-foreground">

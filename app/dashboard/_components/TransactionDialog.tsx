@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import CategoryPicker from "./CategoryPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { Calendar1Icon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { createTransaction } from "../_actions/transactions";

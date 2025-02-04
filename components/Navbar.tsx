@@ -11,20 +11,30 @@ import { ThemeSwitcherBtn } from "./ThemeSwitcherBtn";
 import {Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle} from "./ui/sheet";
 import { Menu } from "lucide-react";
 
+const path = [ "/", "/wizard", "/sign-in", "/sign-up" ]; 
+
+
 function Navbar() {
+	const pathname = usePathname();
   return (
 	<>
-	  <DesktopNavbar />
-	  <MobileNavbar />
+	{!path.includes(pathname) && (
+	  <>
+		<DesktopNavbar />
+		<MobileNavbar />
+	  </>
+	)}
 	</>
   );
 };
 
 const items = [
-	{ label: "Dashboard", link: "/" },
+	{ label: "Dashboard", link: "/dashboard" },
 	{ label: "Transactions", link: "/transactions" },
 	{ label: "Catégories", link: "/manage" },
 	];
+
+
 
 
 function MobileNavbar() {
@@ -71,7 +81,6 @@ function DesktopNavbar() {
   return (
 	<div className="hidden border-separate border-b bg-background md:block">
 	  <nav className=" h-[70px]  flex items-center justify-between mx-10">
-		{/* <div className="flex h-[08px] min-h-[60px] items-center gap-x-4">  */}
 			<Logo />
 			<div className="flex h-full ">
 				{items.map((item) => (
