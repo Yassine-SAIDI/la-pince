@@ -33,11 +33,18 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env
 
-
-
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# CI/CD artifacts
+/reports
+/lighthouse-reports
+/cypress/videos
+/cypress/screenshots
+
+# Docker
+.dockerignore

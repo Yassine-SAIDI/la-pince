@@ -20,6 +20,25 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+### Docker local
+
+Assurez-vous d’avoir Docker Desktop (ou Docker Engine) et Docker Compose v2 installés.  
+Lancez votre app et la base de données :
+
+```bash
+# Avec Docker Compose v2 (recommandé)
+docker compose up --build
+
+# Si vous utilisez la CLI classique
+docker-compose up --build
+```
+
+Puis testez l’API de santé :
+
+```bash
+curl -s http://localhost:3000/api/health
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

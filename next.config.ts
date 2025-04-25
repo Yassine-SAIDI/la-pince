@@ -4,11 +4,9 @@ const nextConfig: NextConfig = {
   /* config options here */
 
   typescript: {
-    // Ceci désactive la vérification de type pendant le build
-    ignoreBuildErrors: true,
-  
+    // Réactivation de la vérification des erreurs TypeScript
+    ignoreBuildErrors: false,
   },
-  
 };
 
 export default nextConfig;

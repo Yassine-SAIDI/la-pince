@@ -29,9 +29,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import CategoryPicker from "./CategoryPicker";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import { Calendar1Icon, Loader2 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { createTransaction } from "../_actions/transactions";
@@ -53,7 +57,7 @@ function CreateTransactionDialog({ trigger, type }: Props) {
     },
   });
 
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handelCategoryChange = useCallback(
     (category: string) => {
@@ -64,13 +68,13 @@ const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const {mutate, isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createTransaction,
     onSuccess: () => {
       toast.success("Transaction ajoutée avec succès", {
         id: "create-transaction",
       });
-      
+
       form.reset({
         type,
         date: new Date(),
@@ -87,14 +91,19 @@ const [open, setOpen] = useState(false);
     },
   });
 
-  const onSubmit = useCallback((value: CreateTransactionSchemaType) => {
-    toast.loading("Ajout de la transaction en cours...", {id: "create-transaction"});
+  const onSubmit = useCallback(
+    (value: CreateTransactionSchemaType) => {
+      toast.loading("Ajout de la transaction en cours...", {
+        id: "create-transaction",
+      });
 
-    mutate({
-      ...value,
-      date: DateToUTCDate(value.date),
-    });
-  }, [mutate]);
+      mutate({
+        ...value,
+        date: DateToUTCDate(value.date),
+      });
+    },
+    [mutate]
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -149,24 +158,23 @@ const [open, setOpen] = useState(false);
             {/* Transaction: {form.watch("category")} */}
             <div className="flex items-center ml2 justify-between gap-2">
               <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Catégorie</FormLabel>
-                    <FormControl>
-                      <CategoryPicker
-                        type={type}
-                        onChange={handelCategoryChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      La catégorie de la transaction
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
+                  control={form.control}
+                  name="category"
+                  render={() => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Catégorie</FormLabel>
+                      <FormControl>
+                        <CategoryPicker
+                          type={type}
+                          onChange={handelCategoryChange}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        La catégorie de la transaction
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
               <FormField
                 control={form.control}
                 name="date"
@@ -194,21 +202,21 @@ const [open, setOpen] = useState(false);
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                             selected={field.value}
-                             onSelect={(value) => {
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(value) => {
                               if (!value) return;
                               // console.log("@@Calendar", value);
                               field.onChange(value);
-                              }}
-                             initialFocus
-                            />
+                            }}
+                            initialFocus
+                          />
                         </PopoverContent>
                       </Popover>
                     </FormControl>
                     <FormDescription>La date de la transaction</FormDescription>
-                    <FormMessage/>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -216,19 +224,20 @@ const [open, setOpen] = useState(false);
           </form>
         </Form>
         <DialogFooter>
-        <DialogClose asChild>
-              <Button
+          <DialogClose asChild>
+            <Button
               type="button"
               variant={"secondary"}
-              onClick={() => form.reset()}>
-                Annuler
-              </Button>
-        </DialogClose>
-        <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
+              onClick={() => form.reset()}
+            >
+              Annuler
+            </Button>
+          </DialogClose>
+          <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
             {!isPending && "Ajouter"}
             {isPending && <Loader2 className="animate-spin h-4 w-4" />}
-            </Button>
-      </DialogFooter>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

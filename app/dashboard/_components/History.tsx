@@ -25,12 +25,17 @@ function History({ userSettings }: { userSettings: UserSettings }) {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const [period, setPeriod] = useState<Period>({
     year: new Date().getFullYear(),
-    month: new Date().getMonth() ,
+    month: new Date().getMonth(),
   });
 
   const formatter = useMemo(() => {
     return GetFormatterForCurrency(userSettings.currency);
   }, [userSettings.currency]);
+
+  const rechartsFormatter = useCallback(
+    (value: number) => formatter.format(value),
+    [formatter]
+  );
 
   const historyDataQuery = useQuery({
     queryKey: ["overview", "history", timeframe, period],
@@ -109,7 +114,9 @@ function History({ userSettings }: { userSettings: UserSettings }) {
                           month: "short",
                         });
                       }
-                      return date.toLocaleDateString("default", { day: "2-digit" });
+                      return date.toLocaleDateString("default", {
+                        day: "2-digit",
+                      });
                     }}
                   />
                   <YAxis
@@ -135,7 +142,13 @@ function History({ userSettings }: { userSettings: UserSettings }) {
                   <Tooltip
                     cursor={{ opacity: 0.1 }}
                     content={(props) => {
-                        return <CustomTooltip {...props} formatter={formatter} />
+                      const tooltipProps = props as any;
+                      return (
+                        <CustomTooltipWrapper
+                          formatterFn={rechartsFormatter}
+                          {...tooltipProps}
+                        />
+                      );
                     }}
                   />
                 </BarChart>
@@ -158,66 +171,69 @@ function History({ userSettings }: { userSettings: UserSettings }) {
 
 export default History;
 
+function CustomTooltipWrapper({ active, payload, formatterFn }: any) {
+  if (!active || !payload || payload.length === 0) return null;
 
-import { TooltipProps } from "recharts";
+  const data = payload[0].payload;
+  const income = Number(data.income);
+  const expense = Number(data.expense);
 
-function CustomTooltip({ active, payload, formatter }: TooltipProps<number, string> & { formatter: Intl.NumberFormat }) {
-    if (!active || !payload || payload.length === 0) return null;
-    
-    const data = payload[0].payload;
-    const {income, expense} = data;
+  return (
+    <div className="min-w-[300px] rounded border bg-background p-4">
+      <TooltipRow
+        formatter={formatterFn}
+        label="Dépense"
+        value={expense}
+        bgColor="bg-red-500"
+        textColor="text-red-500"
+      />
+      <TooltipRow
+        formatter={formatterFn}
+        label="Revenu"
+        value={income}
+        bgColor="bg-emerald-500"
+        textColor="text-emerald-500"
+      />
+      <TooltipRow
+        formatter={formatterFn}
+        label="solde"
+        value={income - expense}
+        bgColor="bg-gray-100"
+        textColor="text-gray-100"
+      />
+    </div>
+  );
+}
 
-    return (
-        <div className="min-w-[300px] rounded border bg-background p-4">
-            <TooltipRow 
-            formatter={formatter} 
-            label="Dépense" 
-            value={expense} 
-            bgColor="bg-red-500" 
-            textColor="text-red-500" />
-            <TooltipRow
-            formatter={formatter}
-            label="Revenu"
-            value={income}
-            bgColor="bg-emerald-500"
-            textColor="text-emerald-500"
-            />
-            <TooltipRow
-            formatter={formatter}
-            label="solde"
-            value={income - expense}
-            bgColor="bg-gray-100"
-            textColor="text-gray-100"
-            />
-
+function TooltipRow({
+  label,
+  value,
+  bgColor,
+  textColor,
+  formatter,
+}: {
+  label: string;
+  value: number;
+  bgColor: string;
+  textColor: string;
+  formatter: (value: number) => string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={cn("h-4 w-4 rounded-full", bgColor)} />
+      <div className="flex w-full justify-between">
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <div className={cn("text-sm font-bold", textColor)}>
+          <CountUp
+            duration={0.5}
+            preserveValue
+            decimals={0}
+            className="text-sm"
+            end={value}
+            formattingFn={formatter}
+          />
         </div>
-    );
-    
-    }
-
-
-    
-    function TooltipRow({ label, value, bgColor, textColor, formatter }: { label: string, value: number, bgColor: string, textColor: string, formatter: Intl.NumberFormat }) {
-    const formattingFn = useCallback(
-        (value: number) => {
-        return formatter.format(value);
-    }, [formatter]);    
-    return (
-        <div className="flex items-center gap-2">
-            <div className={cn("h-4 w-4 rounded-full", bgColor)}/>
-            <div className="flex w-full justify-between">
-                <p className="text-sm text-muted-foreground">{label}</p>
-                <div className={cn("text-sm font-bold", textColor)}>
-                    <CountUp 
-                    duration={0.5} 
-                    preserveValue
-                    decimals={0}
-                    className="text-sm"
-                    end={value} 
-                    formattingFn= {formattingFn}
-                   />
-                </div>
-            </div>
-        </div>
-    );
+      </div>
+    </div>
+  );
 }

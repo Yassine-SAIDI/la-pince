@@ -1,0 +1,118 @@
+name: La Pince CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npx prisma migrate deploy
+      - run: npm run test:unit
+      - run: npm run test:integration
+      - run: npm run test:security
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    if: success() && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: .next/
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: .next/
+
+      - name: Setup Node.js for deployment
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+          cache: "npm"
+
+      - name: Install production dependencies
+        run: npm ci --production
+
+      - name: Deploy to Vercel
+        id: deploy
+        uses: amondnet/vercel-action@v25 # Utilisation d'une version plus récente
+        with:
+          vercel-token: ${{ secrets.VERCEL_API_TOKEN }}
+          vercel-project-id: ${{ vars.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
+
+      - name: Verify Deployment
+        run: |
+          echo "Deployed to ${{ steps.deploy.outputs.preview-url }}"
+          curl -sSf ${{ steps.deploy.outputs.preview-url }}/api/health || exit 1
+
+      - name: Notify deployment status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: deployments
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: Déploiement La Pince
+          SLACK_MESSAGE: ${{ job.status == 'success' && 'Déploiement réussi! 🚀' || 'Échec du déploiement ❌' }}
+          SLACK_FOOTER: "La Pince | Production"
