@@ -27,38 +27,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-    <html lang="fr"
-    className="dark"
-    style={{
-      colorScheme: "dark"
-      }}
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
+      <html
+        lang="fr"
+        className="dark"
+        style={{
+          colorScheme: "dark",
+        }}
       >
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Toaster richColors position="top-center" />
-        <RootProviders>
-          <Navbar />
-                  <div className='w-full h-screen'>
-                  {children}
-                  </div>
-                  <footer className='w-full bg-card  p-4 flex flex-col items-center justify-center gap-4'>
-                  <p className='text-center text-muted-foreground text-sm'>
-                  La Pince © 2025 - Tous droits réservés
-                  </p>
-                  <div className='flex gap-4'>
-                  <a href='#' className='text-muted-foreground hover:text-white'>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Toaster richColors position="top-center" />
+          <RootProviders>
+            <Navbar />
+            <div className="w-full h-screen">{children}</div>
+            <footer className="w-full bg-card  p-4 flex flex-col items-center justify-center gap-4">
+              <p className="text-center text-muted-foreground text-sm">
+                La Pince © 2025 - Tous droits réservés
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className="text-muted-foreground hover:text-white">
                   Mentions légales
-                  </a>
-                  <a href='#' className='text-muted-foreground hover:text-white'>
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-white">
                   Politique de confidentialité
-                  </a>
-                  </div>
-                  </footer>
-        </RootProviders>
-      </body>
-    </html>
+                </a>
+              </div>
+            </footer>
+          </RootProviders>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
