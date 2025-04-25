@@ -9,57 +9,57 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 model UserSettings {
-  userId String @id 
+  userId   String @id
   currency String
 }
 
 model Category {
-  userId String
-  name String
+  userId    String
+  name      String
   createdAt DateTime @default(now())
-  icon String
-  type String @default("expense")
+  icon      String
+  type      String   @default("expense")
 
   @@unique([name, userId, type])
 }
 
 model Transaction {
-  id String @id @default(uuid())
-  userId String
-  amount Float
-  description String?
-  category String
+  id           String   @id @default(uuid())
+  userId       String
+  amount       Float
+  description  String?
+  category     String
   categoryIcon String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  date DateTime
-  type String @default("expense")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  date         DateTime
+  type         String   @default("expense")
 
   @@unique([id, userId])
 }
 
 model MonthHistory {
-  userId String
-  day Int
-  month Int
-  year Int
-  income Float
+  userId  String
+  day     Int
+  month   Int
+  year    Int
+  income  Float
   expense Float
 
   @@unique([userId, day, month, year])
 }
 
 model YearHistory {
-  userId String
-  month Int
-  year Int
-  income Float
+  userId  String
+  month   Int
+  year    Int
+  income  Float
   expense Float
 
   @@unique([userId, month, year])
