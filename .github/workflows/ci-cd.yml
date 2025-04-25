@@ -96,7 +96,7 @@ jobs:
         with:
           vercel-token: ${{ secrets.VERCEL_API_TOKEN }}
           vercel-project-id: ${{ vars.VERCEL_PROJECT_ID }}
-          vercel-args: "--prod --yes"
+          vercel-args: "--prod"
 
       - name: Verify Deployment
         run: |
