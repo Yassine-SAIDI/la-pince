@@ -141,4 +141,3 @@ vercel --prod
 ## 📄 Licence
 
 Projet librement réutilisable à des fins pédagogiques.
-
