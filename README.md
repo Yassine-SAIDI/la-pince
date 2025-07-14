@@ -1,80 +1,97 @@
-# La Pince
+# 💸 La Pince – Application de gestion de finances personnelles
 
-Application web de gestion de finances personnelles, développée avec [Next.js](https://nextjs.org), [Prisma](https://www.prisma.io/), [Clerk](https://clerk.com/), [PostgreSQL](https://www.postgresql.org/), [React Query](https://tanstack.com/query/latest), [Tailwind CSS](https://tailwindcss.com/) et Docker.
+**La Pince** est une application web fullstack qui aide les utilisateurs à suivre leurs revenus, leurs dépenses, et à mieux gérer leur budget au quotidien. Ce projet a été réalisé dans le cadre de ma formation CDA (Concepteur Développeur d'Applications) comme projet de fin d'études.
 
----
-
-## Sommaire
-
-- [Fonctionnalités](#fonctionnalités)
-- [Prérequis](#prérequis)
-- [Installation & Démarrage](#installation--démarrage)
-- [Configuration des variables d'environnement](#configuration-des-variables-denvironnement)
-- [Utilisation de Docker](#utilisation-de-docker)
-- [Tests & Qualité](#tests--qualité)
-- [CI/CD](#cicd)
-- [Déploiement sur Vercel](#déploiement-sur-vercel)
-- [Ressources utiles](#ressources-utiles)
+🔗 [Démo en ligne](https://la-pince.vercel.app)
 
 ---
 
-## Fonctionnalités
+## 📌 Contexte
+
+Face à la multiplication des abonnements, paiements en ligne et dépenses quotidiennes, *La Pince* vise à offrir une interface simple, sécurisée et moderne pour aider chacun à garder le contrôle de son budget.
+
+---
+
+## 🎯 Objectifs
+
+- Suivi des revenus et dépenses
+- Création de catégories personnalisées
+- Visualisation des données via des graphiques
+- Export des données (CSV)
+- Interface responsive et sécurisée
+
+---
+
+## 🔐 Fonctionnalités
 
 - Authentification sécurisée avec Clerk
 - Gestion des transactions (revenus, dépenses)
-- Catégorisation, historique, statistiques et graphiques
+- Catégorisation, historique, statistiques et graphiques dynamiques
 - Interface responsive et thème sombre
 - Export CSV, filtres avancés
 - API REST sécurisée
-- Dashboard utilisateur
+- Dashboard utilisateur personnalisé
 
 ---
 
-## Prérequis
+## 🛠️ Stack technique
 
-- Node.js 20+ et npm
-- Docker & Docker Compose v2
-- Un compte [Clerk](https://clerk.com/) (pour l'auth)
-- Un compte [Vercel](https://vercel.com/) (pour le déploiement)
-- Un accès à une base PostgreSQL (local ou cloud)
+### Frontend
+- [Next.js](https://nextjs.org)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Query (TanStack)](https://tanstack.com/query/latest)
+- [Radix UI](https://www.radix-ui.com/)
+- [Zod](https://zod.dev/)
+- [React Hook Form](https://react-hook-form.com/)
 
----
+### Backend
+- API Routes via Next.js
+- [Prisma ORM](https://www.prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/) (hébergé via Neon)
+- Authentification via [Clerk](https://clerk.com/)
 
-## Installation & Démarrage
-
-### En local (hors Docker)
-
-1. Clone le repo et installe les dépendances :
-
-   ```bash
-   git clone <repo-url>
-   cd la-pince
-   npm install
-   ```
-
-2. Copie le fichier `.env.exemple` en `.env` et configure les variables nécessaires.
-
-3. Lance la base de données (PostgreSQL) si besoin.
-
-4. Applique les migrations Prisma :
-
-   ```bash
-   npx prisma migrate deploy
-   ```
-
-5. Démarre le serveur Next.js :
-
-   ```bash
-   npm run dev
-   ```
-
-6. Accède à [http://localhost:3000](http://localhost:3000)
+### DevOps
+- [Docker](https://www.docker.com/) & Docker Compose
+- [GitHub Actions](https://github.com/features/actions)
+- Déploiement frontend via [Vercel](https://vercel.com)
 
 ---
 
-## Configuration des variables d'environnement
+## 👨‍💻 Mon rôle
 
-Exemple de `.env` :
+- Conception des schémas MCD / MLD & base PostgreSQL
+- Développement frontend (UI, formulaire, dashboard)
+- Backend : API REST sécurisées, logique métier Prisma
+- Sécurisation avec Zod, Clerk, gestion d'erreurs
+- Déploiement CI/CD, conteneurisation Docker
+
+---
+
+## 🐳 Utilisation de Docker
+
+```bash
+docker compose up --build
+```
+
+- App disponible sur http://localhost:3000
+- Base PostgreSQL sur le port 5432
+
+---
+
+## ⚙️ Installation & Démarrage manuel
+
+```bash
+git clone <repo-url>
+cd la-pince
+npm install
+cp .env.example .env # puis remplir les variables
+npx prisma migrate deploy
+npm run dev
+```
+
+---
+
+## 📁 Variables d’environnement
 
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -82,78 +99,45 @@ CLERK_SECRET_KEY=sk_test_...
 DATABASE_URL=postgres://user:password@host:5432/dbname
 ```
 
-- Les clés Clerk sont à récupérer sur [dashboard Clerk](https://dashboard.clerk.com/)
-- `DATABASE_URL` doit pointer vers votre base PostgreSQL
+---
+
+## ✅ Tests & Qualité
+
+- `npm run lint` : Lint avec ESLint
+- `npm run test:unit` : Tests unitaires (Jest + React Testing Library)
+- `npm run test:e2e` : Tests E2E (Cypress)
+- `npm run test:performance` : Audit (Lighthouse)
 
 ---
 
-## Utilisation de Docker
+## 🔄 CI/CD
 
-### Lancer l'application et la base PostgreSQL
+- Intégration continue avec GitHub Actions
+- Build, lint, tests, déploiement automatique sur Vercel
+
+---
+
+## 🚀 Déploiement manuel sur Vercel
+
+1. Connecter le repo GitHub à Vercel
+2. Configurer les variables dans le dashboard
+3. Lancer via interface ou CLI :
 
 ```bash
-docker compose up --build
-```
-
-- L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
-- La base PostgreSQL sur le port 5432
-
-### Vérifier l'API de santé
-
-```bash
-curl -s http://localhost:3000/api/health
+vercel --prod
 ```
 
 ---
 
-## Tests & Qualité
+## 🛣️ Améliorations futures
 
-- **Lint** : `npm run lint`
-- **Tests unitaires** : `npm run test:unit`
-- **Tests d'intégration** : `npm run test:integration`
-- **Tests de sécurité** : `npm run test:security`
-- **Tests E2E (Cypress)** : `npm run test:e2e`
-- **Audit de performance (Lighthouse)** : `npm run test:performance`
+- Authentification 2FA
+- PWA mobile
+- API de recommandations financières
+- Audit automatique de sécurité
 
 ---
 
-## CI/CD
+## 📄 Licence
 
-Le projet utilise GitHub Actions pour :
-
-- Lint, tests, build, et déploiement automatique sur Vercel
-- Variables sensibles (Clerk, DB, Vercel) à configurer dans les **Secrets** du repo
-
-Fichier de workflow : `.github/workflows/ci-cd.yml`
-
----
-
-## Déploiement sur Vercel
-
-Le déploiement est automatisé via GitHub Actions.  
-Pour un déploiement manuel :
-
-1. Connecte ton repo à Vercel
-2. Configure les variables d'environnement dans le dashboard Vercel
-3. Déploie via l'interface ou la CLI :
-
-   ```bash
-   vercel --prod
-   ```
-
----
-
-## Ressources utiles
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
-- [Clerk Documentation](https://clerk.com/docs)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [Vercel Documentation](https://vercel.com/docs)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-
----
-
-## Licence
-
-Projet sous licence MIT.
+Projet librement réutilisable à des fins pédagogiques.
