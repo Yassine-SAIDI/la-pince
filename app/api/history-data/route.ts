@@ -47,6 +47,9 @@ async function getHistoryData(userId: string, timeframe: Timeframe, period: Peri
     }else if(timeframe === 'year'){
         return getYearHistoryData(userId, period.year);
     }
+    
+    // Retour par défaut pour éviter l'erreur TypeScript
+    return [];
 }
 
 type HistoryData = {

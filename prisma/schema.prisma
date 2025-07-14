@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,24 +12,33 @@ datasource db {
 }
 
 model UserSettings {
-  userId   String @id
-  currency String
+  userId    String   @id
+  currency  String   @default("EUR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_settings")
 }
 
 model Category {
   userId    String
   name      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   icon      String
   type      String   @default("expense")
 
+  // Relations
+  transactions Transaction[]
+
   @@unique([name, userId, type])
+  @@map("categories")
 }
 
 model Transaction {
   id           String   @id @default(uuid())
   userId       String
-  amount       Float
+  amount       Decimal  @db.Decimal(12, 2) // Utiliser Decimal pour la précision monétaire
   description  String?
   category     String
   categoryIcon String
@@ -41,7 +47,14 @@ model Transaction {
   date         DateTime
   type         String   @default("expense")
 
+  // Relations
+  categoryRef Category? @relation(fields: [category, userId, type], references: [name, userId, type])
+
   @@unique([id, userId])
+  @@index([userId, date])
+  @@index([userId, type])
+  @@index([userId, category])
+  @@map("transactions")
 }
 
 model MonthHistory {
@@ -49,18 +62,22 @@ model MonthHistory {
   day     Int
   month   Int
   year    Int
-  income  Float
-  expense Float
+  income  Decimal @db.Decimal(12, 2)
+  expense Decimal @db.Decimal(12, 2)
 
   @@unique([userId, day, month, year])
+  @@index([userId, year, month])
+  @@map("month_history")
 }
 
 model YearHistory {
   userId  String
   month   Int
   year    Int
-  income  Float
-  expense Float
+  income  Decimal @db.Decimal(12, 2)
+  expense Decimal @db.Decimal(12, 2)
 
   @@unique([userId, month, year])
+  @@index([userId, year])
+  @@map("year_history")
 }

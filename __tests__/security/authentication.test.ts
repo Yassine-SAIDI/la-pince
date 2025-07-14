@@ -15,7 +15,7 @@ function mockAuthMiddleware(handler: any) {
 }
 
 // Contrôleur protégé fictif
-const protectedHandler = (req: any, res: any) => {
+const protectedHandler = (_req: any, res: any) => {
   return res.status(200).json({ data: "Données protégées" });
 };
 
