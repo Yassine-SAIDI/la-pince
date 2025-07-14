@@ -64,7 +64,7 @@ function CategoriesCard ({ formatter, type, data }:{
 }) {
     const filteredData = data.filter((el) => el.type === type);
     const total = filteredData.reduce(
-        (acc, el) => acc + (el._sum?.amount || 0), 0);
+        (acc, el) => acc + Number(el._sum?.amount || 0), 0);
 
 
     return (
@@ -90,7 +90,7 @@ function CategoriesCard ({ formatter, type, data }:{
                   <ScrollArea className="min-h-60 h-auto w-full px-4">
                     <div className="flex flex-col gap-4 w-full p-4">
                       {filteredData.map((item) =>{
-                        const amount = item._sum.amount || 0;
+                        const amount = Number(item._sum.amount || 0);
                         const percentage = (amount / total) * 100;
 
                         return (
