@@ -86,8 +86,8 @@ async function getYearHistoryData(userId: string, year: number){
 
         const month = result.find((r) => r.month === i);
         if(month){
-            expense = month._sum.expense || 0;
-            income = month._sum.income || 0;
+            expense = Number(month._sum.expense) || 0;
+            income = Number(month._sum.income) || 0;
         }
 
         history.push({
@@ -129,8 +129,8 @@ async function getMonthHistoryData(userId: string, month: number, year: number){
 
         const day = result.find((r) => r.day === i);
         if(day){
-            expense = day._sum.expense || 0;
-            income = day._sum.income || 0;
+            expense = Number(day._sum.expense) || 0;
+            income = Number(day._sum.income) || 0;
         }
 
         history.push({
